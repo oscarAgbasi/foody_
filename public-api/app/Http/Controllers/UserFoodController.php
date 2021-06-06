@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserFoodController extends Controller
 {
@@ -35,11 +36,19 @@ class UserFoodController extends Controller
 
     public function addFood(Request $request, int $userId, int $foodId)
     {
-        $servingsPerWeek = $request->input('servingsPerWeek');
-        
-        $response = Http::put("{$this->privateApiUrl}/users/{$userId}/foods/{$foodId}", [
-            'servingsPerWeek' => $servingsPerWeek
+        $validation = Validator::make($request->all(), [
+            'servingsPerWeek' => 'required|numeric|min:1',
         ]);
-        return $response->json();
+        //return $request->input();
+        if($validation->fails()){
+            return App::abort(404);
+        } else {
+            $servingsPerWeek = $request->input('servingsPerWeek');
+
+            $response = Http::put("{$this->privateApiUrl}/users/{$userId}/foods/{$foodId}", [
+                'servingsPerWeek' => $servingsPerWeek
+            ]);
+            return $response->json();
+        }
     }
 }

@@ -4,12 +4,15 @@ import SearchDropdown from './SearchDropdown';
 
 import '../less/global.less';
 import '../less/user.less';
+import Loader from './Loader';
 
 export default class Users extends React.Component {
 
   state = {
     user: {},
-    userFoods: []
+    userFoods: [],
+    isLoading: true,
+    toggleAfterClick: false
   }
 
   async addFood(foodId) {
@@ -45,9 +48,11 @@ export default class Users extends React.Component {
   }
 
   async removeFood(foodId) {
+    this.setState({toggleAfterClick: true})
     await axios.delete(`${process.env.REACT_APP_PUBLIC_API_URL}/users/${this.props.match.params.userId}/foods/${foodId}`)
     
     const userFoods = this.state.userFoods.filter(userFood => {
+      this.setState({toggleAfterClick: false})
       return userFood.foodId !== foodId;
     });
 
@@ -56,8 +61,13 @@ export default class Users extends React.Component {
 
   componentDidMount() {
     axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/users/${this.props.match.params.userId}`).then((response) => {
+      this.setState({isLoading: false})
       this.setState({user: response.data});
     })
+
+    // axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/nutrients/`).then((res) => {
+    //   console.log('data:' + res.data)
+    // })
     
     axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/users/${this.props.match.params.userId}/foods`).then((response) => {
       this.setState({userFoods: response.data});
@@ -65,6 +75,9 @@ export default class Users extends React.Component {
   }
 
   render() {
+    if (this.state.isLoading) {
+      return <Loader/>
+    }
     return (
       <div>
         <h1>User information</h1>
@@ -95,7 +108,8 @@ export default class Users extends React.Component {
                 <td>{userFood.food.description}</td>
                 <td>{userFood.food.publicationDate}</td>
                 <td>{userFood.servingsPerWeek ?? 0}</td>
-                <td><button onClick={() => this.removeFood(userFood.food.id)}>Remove</button></td>
+                <td><button onClick={() => this.removeFood(userFood.food.id)} 
+                  disabled={this.state.toggleAfterClick}>Remove</button></td>
               </tr>)}
           </tbody>
         </table>

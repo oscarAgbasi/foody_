@@ -22,10 +22,17 @@ export class UsersService {
       take,
     });
   }
+  // findAll() {
+  //   return `This action returns all users`;
+  // }
 
   findOne(id: number) {
     return this.usersRepository.findOneOrFail(id);
   }
+  // findOne(id: number) {
+  //   console.log('Slected');
+  //   return `This action returns all users`;
+  // }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     await this.usersRepository.update({ id }, updateUserDto);
@@ -33,6 +40,7 @@ export class UsersService {
   }
 
   remove(id: number) {
+    console.log('Removed');
     return this.usersRepository.delete({ id });
   }
 }

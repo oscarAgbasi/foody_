@@ -29,5 +29,11 @@ Route::get('/users/{userId}/foods/{foodId}', ['uses' => 'UserFoodController@food
 Route::put('/users/{userId}/foods/{foodId}', ['uses' => 'UserFoodController@addFood']);
 Route::delete('/users/{userId}/foods/{foodId}', ['uses' => 'UserFoodController@deleteFood']);
 
+Route::get('/nutrients', ['uses' => 'NutrientsController@index']);
+Route::get('/nutrients/{nutrientID}', ['uses' => 'NutrientsController@show']);
+Route::post('/nutrients', ['uses' => 'NutrientsController@create']);
+Route::put('/nutrients/{nutrientID}', ['uses' => 'NutrientsController@update']);
+Route::delete('/nutrients/{nutrientID}', ['uses' => 'NutrientsController@remove']);
+
 Route::get('/foods', ['uses' => 'FoodController@index']);
 Route::get('/foods/{foodId}', ['uses' => 'FoodController@show']);

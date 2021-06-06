@@ -35,6 +35,7 @@ export class UserFoodsService {
   }
 
   addFood(userId: number, foodId: number, addUserFoodDto: AddUserFoodDto) {
+    console.dir(addUserFoodDto);
     return this.userFoodsRepository.insert({
       userId,
       foodId,
